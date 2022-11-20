@@ -3,6 +3,7 @@ provider "digitalocean" {
 }
 
 resource "digitalocean_droplet" "this" {
+  count   = var.cluster_size
   image   = var.image
   name    = "${var.project_name}-0${count.index}"
   region  = var.region
