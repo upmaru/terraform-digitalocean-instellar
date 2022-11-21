@@ -34,4 +34,4 @@ These are the rules that govern the incoming / outgoing traffic from your nodes
 
 ## Database
 
-This will be the database you select used for running your application. Instellar will use `posgresql` as the default database.
+This will be the database you select used for running your application. Instellar will use `posgresql` as the default database. By default it will use the lowest tier. If you wish to use a larger db instance you can customize it.
