@@ -8,11 +8,10 @@ This is the setup that is recommended for hosting production apps. It sets up th
 + [Nodes](#nodes)
 + [VPC](#vpc)
 + [Firewall Rules](#firewall-rules)
-+ [Database](#database)
 
 ## Design
 
-![design](/assets/scope.jpg)
+![scope](/assets/scope.jpg)
 
 ## Bastion
 
