@@ -12,4 +12,4 @@ This is the setup that is recommended for hosting production apps. It sets up th
 
 ## Design
 
-![design](/assets/design.jpeg)
+![design](/assets/design.jpg)
