@@ -2,9 +2,9 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "digitalocean_vpc" "nodes_vpc" {
+resource "digitalocean_vpc" "cluster_vpc" {
   name        = "${var.cluster_name}-instellar-vpc"
-  description = "VPC used for instellar.app nodes"
+  description = "VPC used for https://instellar.app nodes"
   region      = var.region
   ip_range    = var.vpc_ip_range
 }
@@ -15,6 +15,7 @@ resource "digitalocean_droplet" "bastion" {
   region   = var.region
   size     = var.bastion_size
   ssh_keys = var.ssh_keys
+  vpc_uuid = digitalocean_vpc.cluster_vpc.id
 }
 
 resource "digitalocean_droplet" "nodes" {
@@ -23,7 +24,7 @@ resource "digitalocean_droplet" "nodes" {
   name     = "${var.cluster_name}.0${count.index + 1}"
   region   = var.region
   size     = var.node_size
-  vpc_uuid = digitalocean_vpc.nodes_vpc.id
+  vpc_uuid = digitalocean_vpc.cluster_vpc.id
 }
 
 resource "digitalocean_firewall" "nodes_firewall" {
