@@ -10,3 +10,8 @@ resource "digitalocean_droplet" "this" {
   size     = var.size
   ssh_keys = var.ssh_keys
 }
+
+resource "digitalocean_project" "this" {
+  name = var.project_name
+  resources = digitalocean_droplet.this[*].urn
+}
