@@ -10,10 +10,10 @@ resource "digitalocean_vpc" "nodes_vpc" {
 }
 
 resource "digitalocean_droplet" "bastion" {
-  image  = var.image
-  name   = "${var.cluster_name}-bastion"
-  region = var.region
-  size   = var.bastion_size
+  image    = var.image
+  name     = "${var.cluster_name}-bastion"
+  region   = var.region
+  size     = var.bastion_size
   ssh_keys = var.ssh_keys
 }
 
@@ -94,8 +94,8 @@ resource "digitalocean_firewall" "bastion_firewall" {
 resource "digitalocean_project" "project" {
   name        = var.cluster_name
   environment = var.environment
-  resources   = concat(
-    digitalocean_droplet.nodes[*].urn, 
+  resources = concat(
+    digitalocean_droplet.nodes[*].urn,
     digitalocean_droplet.bastion[*].urn
   )
 }
