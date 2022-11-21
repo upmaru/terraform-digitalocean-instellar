@@ -4,11 +4,11 @@ This repository is used to store all terraform files for bootstrapping clusters 
 
 This is the setup that is recommended for hosting production apps. It sets up the following components
 
-+ Bastion 
-+ Nodes
-+ VPC
-+ Firewall Rules
-+ Database
++ [Bastion](#bastion) 
++ [Nodes](#nodes)
++ [VPC](#vpc)
++ [Firewall Rules](#firewall-rules)
++ [Database](#database)
 
 ## Design
 
@@ -34,4 +34,4 @@ These are the rules that govern the incoming / outgoing traffic from your nodes
 
 ## Database
 
-This will be the database you select used for running your application.
+This will be the database you select used for running your application. Instellar will use `posgresql` as the default database.
