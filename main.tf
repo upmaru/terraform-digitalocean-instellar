@@ -14,6 +14,7 @@ resource "digitalocean_droplet" "bastion" {
   name   = "${var.cluster_name}-bastion"
   region = var.region
   size   = var.bastion_size
+  ssh_keys = var.ssh_keys
 }
 
 resource "digitalocean_droplet" "nodes" {
@@ -22,7 +23,6 @@ resource "digitalocean_droplet" "nodes" {
   name     = "${var.cluster_name}.0${count.index + 1}"
   region   = var.region
   size     = var.node_size
-  ssh_keys = var.ssh_keys
   vpc_uuid = digitalocean_vpc.nodes_vpc.id
 }
 
@@ -35,7 +35,7 @@ resource "digitalocean_firewall" "nodes_firewall" {
   inbound_rule {
     protocol           = "tcp"
     port_range         = "22"
-    source_droplet_ids = [digitalocean_droplet.bastion.id]
+    source_droplet_ids = digitalocean_droplet.bastion[*].id
   }
 
   # Enable instellar to communicate with the nodes
@@ -65,7 +65,7 @@ resource "digitalocean_firewall" "nodes_firewall" {
 resource "digitalocean_firewall" "bastion_firewall" {
   name = "${var.cluster_name}-instellar-bastion"
 
-  droplet_ids = digitalocean_droplet.bastion[0].id
+  droplet_ids = digitalocean_droplet.bastion[*].id
 
   # SSH from any where
   inbound_rule {
@@ -94,5 +94,8 @@ resource "digitalocean_firewall" "bastion_firewall" {
 resource "digitalocean_project" "project" {
   name        = var.cluster_name
   environment = var.environment
-  resources   = concat(digitalocean_droplet.nodes[*].urn, digitalocean_droplet.bastion[*].urn)
+  resources   = concat(
+    digitalocean_droplet.nodes[*].urn, 
+    digitalocean_droplet.bastion[*].urn
+  )
 }
