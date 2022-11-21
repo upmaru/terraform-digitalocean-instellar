@@ -24,3 +24,9 @@ variable "size" {
   description = "Size of instances you want to use defaults to Basic 1GB instances https://slugs.do-api.dev/"
   default = "s-1vcpu-1gb"
 }
+
+variable "ssh_keys" {
+  type = list(number)
+  description = "List of ssh keys retrieved using doctl compute ssh-key list"
+  default = []
+}
