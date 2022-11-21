@@ -12,7 +12,7 @@ This is the setup that is recommended for hosting production apps. It sets up th
 
 ## Design
 
-![design](/assets/design.jpg)
+![design](/assets/scope.jpg)
 
 ## Bastion
 
@@ -30,8 +30,4 @@ This is the virtual private cloud that hosts all your nodes. It provides private
 
 ## Firewall Rules
 
-These are the rules that govern the incoming / outgoing traffic from your nodes
-
-## Database
-
-This will be the database you select used for running your application. Instellar will use `posgresql` as the default database. By default it will use the lowest tier. If you wish to use a larger db instance you can customize it.
+These are the rules that govern the incoming / outgoing traffic from your nodes.
