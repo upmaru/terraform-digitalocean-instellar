@@ -12,16 +12,31 @@ variable "cluster_size" {
   default     = 1
 }
 
+variable "cluster_name" {
+  description = "Name for your project"
+}
+
 variable "image" {
   description = "Image type of choice default is ubuntu 22.04 x86"
   default     = "ubuntu-22-04-x64"
 }
 
-variable "project_name" {
-  description = "Name for your project"
+variable "environment" {
+  description = "Environment for project in Digital Ocean possible values are Development, Staging, Production"
+  default     = "Production"
 }
 
-variable "size" {
+variable "vpc_ip_range" {
+  description = "The IP range to use for VPC"
+  default     = "10.0.1.0/24"
+}
+
+variable "bastion_size" {
+  description = "Size of the bastion instance defaults to Basic 512MB instance https://slugs.do-api.dev/"
+  default     = "s-1vcpu-512mb-10gb"
+}
+
+variable "node_size" {
   description = "Size of instances you want to use defaults to Basic 1GB instances https://slugs.do-api.dev/"
   default     = "s-1vcpu-1gb"
 }
