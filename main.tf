@@ -8,7 +8,7 @@ resource "tls_private_key" "bastion_key" {
 
 resource "digitalocean_ssh_key" "bastion" {
   name       = "${var.cluster_name}-bastion"
-  public_key = tls_private_key.bastion_key.public_key_pem
+  public_key = tls_private_key.bastion_key.public_key_openssh
 }
 
 resource "digitalocean_tag" "db_access" {
