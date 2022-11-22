@@ -2,6 +2,15 @@ provider "digitalocean" {
   token = var.do_token
 }
 
+resource "tls_private_key" "bastion_key" {
+  algorithm = "ED25519"
+}
+
+resource "digitalocean_ssh_key" "bastion" {
+  name       = "${var.cluster_name}-bastion"
+  public_key = tls_private_key.bastion_key.public_key_pem
+}
+
 resource "digitalocean_tag" "db_access" {
   name = "${var.cluster_name}-db-access"
 }
