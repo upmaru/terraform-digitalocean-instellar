@@ -64,13 +64,13 @@ resource "digitalocean_firewall" "nodes_firewall" {
   # Enable full cross-node communication
   inbound_rule {
     protocol    = "tcp"
-    port_range  = "10000-65535"
+    port_range  = "1-65535"
     source_tags = [digitalocean_tag.instellar_node.id]
   }
 
   inbound_rule {
     protocol    = "udp"
-    port_range  = "10000-65535"
+    port_range  = "1-65535"
     source_tags = [digitalocean_tag.instellar_node.id]
   }
 
