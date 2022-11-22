@@ -24,5 +24,5 @@ resource "digitalocean_database_firewall" "database_firewall" {
 
 resource "digitalocean_project_resources" "add_database" {
   project   = var.project_id
-  resources = digitalocean_database_cluster.database[*].urn
+  resources = [digitalocean_database_cluster.database[0].urn]
 }
