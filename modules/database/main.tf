@@ -12,3 +12,12 @@ resource "digitalocean_database_cluster" "database" {
   node_count           = var.db_node_count
   private_network_uuid = var.cluster_vpc_id
 }
+
+resource "digitalocean_database_firewall" "database_firewall" {
+  cluster_id = digitalocean_database_cluster.database.id
+
+  rule {
+    type  = "tag"
+    value = var.db_access_tag_id
+  }
+}

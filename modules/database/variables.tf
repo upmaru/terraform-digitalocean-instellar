@@ -34,6 +34,10 @@ variable "region" {
   description = "Region for your cluster"
 }
 
+variable "db_access_tag_id" {
+  description = "Tag given to nodes that have db access"
+}
+
 variable "should_create_db_cluster" {
   description = "Should we create the db cluster?"
   type        = bool
