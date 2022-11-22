@@ -47,6 +47,7 @@ resource "digitalocean_droplet" "nodes" {
   name     = "${var.cluster_name}-node.0${count.index + 1}"
   region   = var.region
   size     = var.node_size
+  ssh_keys = [digitalocean_ssh_key.bastion.fingerprint]
   vpc_uuid = digitalocean_vpc.cluster_vpc.id
   tags     = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_node.id]
 }
