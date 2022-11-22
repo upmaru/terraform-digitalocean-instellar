@@ -21,3 +21,8 @@ resource "digitalocean_database_firewall" "database_firewall" {
     value = var.db_access_tag_id
   }
 }
+
+resource "digitalocean_project_resources" "add_database" {
+  project   = var.project_id
+  resources = digitalocean_database_cluster.database[*].urn
+}

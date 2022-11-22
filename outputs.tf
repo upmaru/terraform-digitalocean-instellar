@@ -13,3 +13,7 @@ output "cluster_name" {
 output "region" {
   value = var.region
 }
+
+output "project_id" {
+  value = digitalocean_project.project.id
+}

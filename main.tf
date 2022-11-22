@@ -60,18 +60,18 @@ resource "digitalocean_firewall" "nodes_firewall" {
     port_range       = "8443"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
-  
+
   # Enable full cross-node communication
   inbound_rule {
-    protocol         = "tcp"
-    port_range       = "10000-65535"
-    source_tags      = [digitalocean_tag.instellar_node.id]
+    protocol    = "tcp"
+    port_range  = "10000-65535"
+    source_tags = [digitalocean_tag.instellar_node.id]
   }
-  
+
   inbound_rule {
-    protocol         = "udp"
-    port_range       = "10000-65535"
-    source_tags      = [digitalocean_tag.instellar_node.id]
+    protocol    = "udp"
+    port_range  = "10000-65535"
+    source_tags = [digitalocean_tag.instellar_node.id]
   }
 
   # Enable all outbound traffic
