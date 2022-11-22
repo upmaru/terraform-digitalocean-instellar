@@ -1,5 +1,6 @@
 variable "do_token" {
   description = "Digital Ocean API Token"
+  sensitive   = true
 }
 
 variable "region" {
@@ -13,7 +14,7 @@ variable "cluster_size" {
 }
 
 variable "cluster_name" {
-  description = "Name for your project"
+  description = "Name for your cluster"
 }
 
 variable "image" {
