@@ -14,7 +14,7 @@ resource "digitalocean_database_cluster" "database" {
 }
 
 resource "digitalocean_database_firewall" "database_firewall" {
-  cluster_id = digitalocean_database_cluster.database.id
+  cluster_id = digitalocean_database_cluster.database[0].id
 
   rule {
     type  = "tag"
