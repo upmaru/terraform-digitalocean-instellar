@@ -48,3 +48,7 @@ variable "db_node_count" {
   description = "Node count for the database"
   default     = 1
 }
+
+variable "project_id" {
+  description = "The project id to assign the database to"
+}
