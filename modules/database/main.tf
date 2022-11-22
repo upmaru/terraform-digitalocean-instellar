@@ -2,7 +2,7 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "digitalocean_db_cluster" "database" {
+resource "digitalocean_database_cluster" "database" {
   count                = var.should_create_db_cluster ? 1 : 0
   name                 = "${var.cluster_name}.${var.db_cluster_suffix}"
   engine               = var.engine
