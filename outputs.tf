@@ -17,8 +17,3 @@ output "region" {
 output "project_id" {
   value = digitalocean_project.project.id
 }
-
-output "private_key" {
-  value     = tls_private_key.bastion_key.private_key_openssh
-  sensitive = true
-}
