@@ -48,23 +48,29 @@ resource "digitalocean_droplet" "bastion" {
   vpc_uuid = digitalocean_vpc.cluster_vpc.id
   tags     = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_bastion.id]
   
+  connection {
+    type = "ssh"
+    user = "root"
+    host = self.ipv4_address
+    private_key = tls_private_key.terraform_cloud.private_key_openssh
+  }
+  
   provisioner "file" {
     content = tls_private_key.bastion_key.private_key_openssh
-    destination = "/root/.ssh/ed_id25519"
-    
-    connection {
-      type = "ssh"
-      user = "root"
-      host = self.ipv4_address
-      private_key = tls_private_key.terraform_cloud.private_key_openssh
-    }
+    destination = "/root/.ssh/id_ed25519"
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 600 /root/.ssh/id_ed25519"
+    ]
   }
 }
 
 resource "digitalocean_droplet" "nodes" {
   count    = var.cluster_size
   image    = var.image
-  name     = "${var.cluster_name}-node.0${count.index + 1}"
+  name     = "${var.cluster_name}-node-0${count.index + 1}"
   region   = var.region
   size     = var.node_size
   ssh_keys = [digitalocean_ssh_key.bastion.fingerprint]
