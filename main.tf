@@ -2,8 +2,17 @@ provider "digitalocean" {
   token = var.do_token
 }
 
+resource "tls_private_key" "terraform_cloud" {
+  algorithm = "ED25519"
+}
+
 resource "tls_private_key" "bastion_key" {
   algorithm = "ED25519"
+}
+
+resource "digitalocean_ssh_key" "terraform_cloud" {
+  name       = "${var.cluster_name}-terraform-cloud"
+  public_key = tls_private_key.terraform_cloud.public_key_openssh
 }
 
 resource "digitalocean_ssh_key" "bastion" {
@@ -35,10 +44,21 @@ resource "digitalocean_droplet" "bastion" {
   name     = "${var.cluster_name}-bastion"
   region   = var.region
   size     = var.bastion_size
-  ssh_keys = var.ssh_keys
+  ssh_keys = concat(var.ssh_keys, [digitalocean_ssh_key.terraform_cloud.fingerprint])
   vpc_uuid = digitalocean_vpc.cluster_vpc.id
   tags     = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_bastion.id]
-
+  
+  provisioner "file" {
+    content = tls_private_key.bastion_key.private_key_openssh
+    destination = "/root/.ssh/ed_id25519"
+    
+    connection {
+      type = "ssh"
+      user = "root"
+      host = self.public_ip
+      private_key = tls_private_key.terraform_cloud.private_key_openssh
+    }
+  }
 }
 
 resource "digitalocean_droplet" "nodes" {
