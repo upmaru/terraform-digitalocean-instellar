@@ -43,7 +43,7 @@ variable "node_size" {
 }
 
 variable "ssh_keys" {
-  type        = list(number)
-  description = "List of ssh keys retrieved using doctl compute ssh-key list"
+  type        = list(string)
+  description = "List of ssh keys fingerpting"
   default     = []
 }
