@@ -55,7 +55,7 @@ resource "digitalocean_droplet" "bastion" {
     connection {
       type = "ssh"
       user = "root"
-      host = self.public_ip
+      host = self.ipv4_address
       private_key = tls_private_key.terraform_cloud.private_key_openssh
     }
   }
