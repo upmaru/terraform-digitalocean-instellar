@@ -8,6 +8,7 @@ This is the setup that is recommended for hosting production apps. It sets up th
 + [Nodes](#nodes)
 + [VPC](#vpc)
 + [Firewall Rules](#firewall-rules)
++ [Database](#database)
 
 ## Design
 
@@ -30,3 +31,9 @@ This is the virtual private cloud that hosts all your nodes. It provides private
 ## Firewall Rules
 
 These are the rules that govern the incoming / outgoing traffic from your nodes.
+
+## Database
+
+The default database we will be setting up is PostgreSQL. This is the database you will also be able to host data for your application.
+
+You can also customize and add more databases to your cluster.
