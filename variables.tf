@@ -44,6 +44,6 @@ variable "node_size" {
 
 variable "ssh_keys" {
   type        = list(string)
-  description = "List of ssh keys fingerpting"
+  description = "List of ssh keys fingerprint"
   default     = []
 }
