@@ -2,161 +2,112 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "tls_private_key" "terraform_cloud" {
-  algorithm = "ED25519"
+resource "ssh_resource" "trust_token" {
+  host         = digitalocean_droplet.boostrap_node.ipv4_address_private
+  bastion_host = digitalocean_droplet.bastion.ipv4_address
+
+  user         = "root"
+  bastion_user = "root"
+
+  private_key         = tls_private_key.bastion_key.private_key_openssh
+  bastion_private_key = tls_private_key.terraform_cloud.private_key_openssh
+
+  commands = [
+    "lxc config trust add --name instellar | sed '1d; /^$/d'"
+  ]
 }
 
-resource "tls_private_key" "bastion_key" {
-  algorithm = "ED25519"
+resource "ssh_resource" "cluster_join_token" {
+  count = var.cluster_size
+
+  host         = digitalocean_droplet.boostrap_node.ipv4_address_private
+  bastion_host = digitalocean_droplet.bastion.ipv4_address
+
+  user         = "root"
+  bastion_user = "root"
+
+  private_key         = tls_private_key.bastion_key.private_key_openssh
+  bastion_private_key = tls_private_key.terraform_cloud.private_key_openssh
+
+  commands = [
+    "lxc cluster add ${var.cluster_name}-node-${format("%02d", count.index + 1)} | sed '1d; /^$/d'"
+  ]
 }
 
-resource "digitalocean_ssh_key" "terraform_cloud" {
-  name       = "${var.cluster_name}-terraform-cloud"
-  public_key = tls_private_key.terraform_cloud.public_key_openssh
-}
-
-resource "digitalocean_ssh_key" "bastion" {
-  name       = "${var.cluster_name}-bastion"
-  public_key = tls_private_key.bastion_key.public_key_openssh
-}
-
-resource "digitalocean_tag" "db_access" {
-  name = "${var.cluster_name}-db-access"
-}
-
-resource "digitalocean_tag" "instellar_node" {
-  name = "${var.cluster_name}-node"
-}
-
-resource "digitalocean_tag" "instellar_bastion" {
-  name = "${var.cluster_name}-bastion"
-}
-
-resource "digitalocean_vpc" "cluster_vpc" {
-  name        = "${var.cluster_name}-instellar-vpc"
-  description = "VPC used for https://instellar.app nodes"
-  region      = var.region
-  ip_range    = var.vpc_ip_range
-}
-
-resource "digitalocean_droplet" "bastion" {
-  image    = var.image
-  name     = "${var.cluster_name}-bastion"
-  region   = var.region
-  size     = var.bastion_size
-  ssh_keys = concat(var.ssh_keys, [digitalocean_ssh_key.terraform_cloud.fingerprint])
-  vpc_uuid = digitalocean_vpc.cluster_vpc.id
-  tags     = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_bastion.id]
+resource "digitalocean_droplet" "boostrap_node" {
+  image     = var.image
+  name      = "${var.cluster_name}-bootstrap-node"
+  region    = var.region
+  size      = var.node_size
+  ssh_keys  = [digitalocean_ssh_key.bastion.fingerprint]
+  vpc_uuid  = digitalocean_vpc.cluster_vpc.id
+  tags      = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_node.id]
+  user_data = file("cloud-init.yml")
 
   connection {
-    type        = "ssh"
-    user        = "root"
-    host        = self.ipv4_address
-    private_key = tls_private_key.terraform_cloud.private_key_openssh
+    type                = "ssh"
+    user                = "root"
+    host                = self.ipv4_address_private
+    private_key         = tls_private_key.bastion_key.private_key_openssh
+    bastion_user        = "root"
+    bastion_host        = digitalocean_droplet.bastion.ipv4_address
+    bastion_private_key = tls_private_key.terraform_cloud.private_key_openssh
   }
 
   provisioner "file" {
-    content     = tls_private_key.bastion_key.private_key_openssh
-    destination = "/root/.ssh/id_ed25519"
+    content = templatefile("${path.module}/templates/lxd-init.yml.tpl", {
+      ip_address   = self.ipv4_address_private
+      server_name  = self.name
+      vpc_ip_range = var.vpc_ip_range
+      storage_size = var.storage_size
+    })
+
+    destination = "/tmp/lxd-init.yml"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 600 /root/.ssh/id_ed25519"
+      "lxd init --preseed < /tmp/lxd-init.yml"
     ]
   }
 }
 
 resource "digitalocean_droplet" "nodes" {
-  count    = var.cluster_size
-  image    = var.image
-  name     = "${var.cluster_name}-node-0${count.index + 1}"
-  region   = var.region
-  size     = var.node_size
-  ssh_keys = [digitalocean_ssh_key.bastion.fingerprint]
-  vpc_uuid = digitalocean_vpc.cluster_vpc.id
-  tags     = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_node.id]
-}
+  count     = var.cluster_size
+  image     = var.image
+  name      = "${var.cluster_name}-node-${format("%02d", count.index + 1)}"
+  region    = var.region
+  size      = var.node_size
+  ssh_keys  = [digitalocean_ssh_key.bastion.fingerprint]
+  vpc_uuid  = digitalocean_vpc.cluster_vpc.id
+  tags      = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_node.id]
+  user_data = file("cloud-init.yml")
 
-resource "digitalocean_firewall" "nodes_firewall" {
-  name = "${var.cluster_name}-instellar-nodes"
-
-  tags = [digitalocean_tag.instellar_node.id]
-
-  # SSH is only open to bastion node
-  inbound_rule {
-    protocol           = "tcp"
-    port_range         = "22"
-    source_droplet_ids = digitalocean_droplet.bastion[*].id
+  connection {
+    type                = "ssh"
+    user                = "root"
+    host                = self.ipv4_address_private
+    private_key         = tls_private_key.bastion_key.private_key_openssh
+    bastion_user        = "root"
+    bastion_host        = digitalocean_droplet.bastion.ipv4_address
+    bastion_private_key = tls_private_key.terraform_cloud.private_key_openssh
   }
 
-  # Enable instellar to communicate with the nodes
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "8443"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+  provisioner "file" {
+    content = templatefile("${path.module}/templates/lxd-join.yml.tpl", {
+      ip_address   = self.ipv4_address_private
+      join_token   = ssh_resource.cluster_join_token[count.index].result
+      storage_size = var.storage_size
+    })
+
+    destination = "/tmp/lxd-join.yml"
   }
 
-  # Enable full cross-node communication
-  inbound_rule {
-    protocol    = "tcp"
-    port_range  = "1-65535"
-    source_tags = [digitalocean_tag.instellar_node.id]
-  }
-
-  inbound_rule {
-    protocol    = "udp"
-    port_range  = "1-65535"
-    source_tags = [digitalocean_tag.instellar_node.id]
-  }
-
-  # Enable all outbound traffic
-  outbound_rule {
-    protocol              = "icmp"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  outbound_rule {
-    protocol              = "udp"
-    port_range            = "1-65535"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  outbound_rule {
-    protocol              = "tcp"
-    port_range            = "1-65535"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-}
-
-resource "digitalocean_firewall" "bastion_firewall" {
-  name = "${var.cluster_name}-instellar-bastion"
-
-  droplet_ids = digitalocean_droplet.bastion[*].id
-
-  # SSH from any where
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "22"
-    source_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  # Enable all outbound traffic
-  outbound_rule {
-    protocol              = "icmp"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  outbound_rule {
-    protocol              = "udp"
-    port_range            = "1-65535"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  outbound_rule {
-    protocol              = "tcp"
-    port_range            = "1-65535"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
+  provisioner "remote-exec" {
+    inline = [
+      "lxd init --preseed < /tmp/lxd-join.yml",
+      "shutdown -r +1"
+    ]
   }
 }
 
@@ -165,6 +116,7 @@ resource "digitalocean_project" "project" {
   environment = var.environment
   resources = concat(
     digitalocean_droplet.nodes[*].urn,
+    digitalocean_droplet.boostrap_node[*].urn,
     digitalocean_droplet.bastion[*].urn
   )
 }
