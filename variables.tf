@@ -13,6 +13,10 @@ variable "cluster_size" {
   default     = 1
 }
 
+variable "storage_size" {
+  description = "Storage size to use with cluster"
+}
+
 variable "cluster_name" {
   description = "Name for your cluster"
 }
