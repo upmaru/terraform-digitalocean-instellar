@@ -8,6 +8,12 @@ variable "region" {
   default     = "sgp1"
 }
 
+variable "protect_leader" {
+  type        = bool
+  description = "Protect database leader node"
+  default     = true
+}
+
 variable "cluster_size" {
   description = "Define the size of your cluster"
   default     = 1

@@ -3,7 +3,7 @@ provider "digitalocean" {
 }
 
 resource "ssh_resource" "trust_token" {
-  host         = digitalocean_droplet.boostrap_node.ipv4_address_private
+  host         = digitalocean_droplet.bootstrap_node.ipv4_address_private
   bastion_host = digitalocean_droplet.bastion.ipv4_address
 
   user         = "root"
@@ -20,7 +20,7 @@ resource "ssh_resource" "trust_token" {
 resource "ssh_resource" "cluster_join_token" {
   count = var.cluster_size
 
-  host         = digitalocean_droplet.boostrap_node.ipv4_address_private
+  host         = digitalocean_droplet.bootstrap_node.ipv4_address_private
   bastion_host = digitalocean_droplet.bastion.ipv4_address
 
   user         = "root"
@@ -34,7 +34,7 @@ resource "ssh_resource" "cluster_join_token" {
   ]
 }
 
-resource "digitalocean_droplet" "boostrap_node" {
+resource "digitalocean_droplet" "bootstrap_node" {
   image     = var.image
   name      = "${var.cluster_name}-bootstrap-node"
   region    = var.region
@@ -67,6 +67,7 @@ resource "digitalocean_droplet" "boostrap_node" {
 
   provisioner "remote-exec" {
     inline = [
+      "cloud-init status --wait",
       "lxd init --preseed < /tmp/lxd-init.yml"
     ]
   }
@@ -105,6 +106,7 @@ resource "digitalocean_droplet" "nodes" {
 
   provisioner "remote-exec" {
     inline = [
+      "cloud-init status --wait",
       "lxd init --preseed < /tmp/lxd-join.yml",
       "shutdown -r +1"
     ]
@@ -116,7 +118,68 @@ resource "digitalocean_project" "project" {
   environment = var.environment
   resources = concat(
     digitalocean_droplet.nodes[*].urn,
-    digitalocean_droplet.boostrap_node[*].urn,
+    digitalocean_droplet.bootstrap_node[*].urn,
     digitalocean_droplet.bastion[*].urn
   )
+}
+
+resource "ssh_resource" "cluster_detail" {
+  count = var.cluster_size
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  host         = digitalocean_droplet.bootstrap_node.ipv4_address_private
+  bastion_host = digitalocean_droplet.bastion.ipv4_address
+
+  user         = "root"
+  bastion_user = "root"
+
+  private_key         = tls_private_key.bastion_key.private_key_openssh
+  bastion_private_key = tls_private_key.terraform_cloud.private_key_openssh
+
+  commands = [
+    "lxc cluster show ${digitalocean_droplet.nodes[count.index].name}"
+  ]
+}
+
+resource "terraform_data" "removal" {
+  count = var.cluster_size
+
+  input = {
+    node_name                   = digitalocean_droplet.nodes[count.index].name
+    bastion_private_key         = tls_private_key.bastion_key.private_key_openssh
+    bastion_public_ip           = digitalocean_droplet.bastion.ipv4_address
+    bootstrap_node_private_ip   = digitalocean_droplet.bootstrap_node.ipv4_address_private
+    terraform_cloud_private_key = tls_private_key.terraform_cloud.private_key_openssh
+    commands = contains(yamldecode(ssh_resource.cluster_detail[count.index].result).roles, "database-leader") ? ["echo ${var.protect_leader ? "Node is database-leader cannot destroy" : "Tearing it all down"}", "exit ${var.protect_leader ? 1 : 0}"] : [
+      "lxc cluster evac --force ${digitalocean_droplet.nodes[count.index].name}",
+      "lxc cluster remove ${digitalocean_droplet.nodes[count.index].name}"
+    ]
+  }
+
+  depends_on = [
+    digitalocean_droplet.bastion,
+    digitalocean_droplet.bootstrap_node,
+    digitalocean_vpc.cluster_vpc,
+    digitalocean_firewall.bastion_firewall,
+    digitalocean_firewall.nodes_firewall
+  ]
+
+  connection {
+    type                = "ssh"
+    user                = "root"
+    host                = self.input.bootstrap_node_private_ip
+    private_key         = self.input.bastion_private_key
+    bastion_user        = "root"
+    bastion_host        = self.input.bastion_public_ip
+    bastion_private_key = self.input.terraform_cloud_private_key
+    timeout             = "10s"
+  }
+
+  provisioner "remote-exec" {
+    when   = destroy
+    inline = self.input.commands
+  }
 }
