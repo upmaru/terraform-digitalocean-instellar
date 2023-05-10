@@ -52,6 +52,16 @@ variable "node_size" {
   default     = "s-1vcpu-1gb"
 }
 
+variable "cluster_topology" {
+  type = list(object({
+    id   = number
+    name = string
+    size = optional(string, "s-1vcpu-1gb")
+  }))
+  description = "How many nodes do you want in your cluster?"
+  default     = []
+}
+
 variable "ssh_keys" {
   type        = list(string)
   description = "List of ssh keys fingerprint"
