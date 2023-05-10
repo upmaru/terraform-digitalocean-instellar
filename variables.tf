@@ -8,6 +8,12 @@ variable "region" {
   default     = "sgp1"
 }
 
+variable "protect_leader" {
+  type        = bool
+  description = "Protect database leader node"
+  default     = true
+}
+
 variable "cluster_size" {
   description = "Define the size of your cluster"
   default     = 1
@@ -44,6 +50,16 @@ variable "bastion_size" {
 variable "node_size" {
   description = "Size of instances you want to use defaults to Basic 1GB instances https://slugs.do-api.dev/"
   default     = "s-1vcpu-1gb"
+}
+
+variable "cluster_topology" {
+  type = list(object({
+    id   = number
+    name = string
+    size = optional(string, "s-1vcpu-1gb")
+  }))
+  description = "How many nodes do you want in your cluster?"
+  default     = []
 }
 
 variable "ssh_keys" {
