@@ -9,7 +9,7 @@ variable "node_size" {}
 
 module "instellar" {
   source = "upmaru/instellar/digitalocean"
-  version = "0.3.2"
+  version = "0.3.3"
 
   do_token     = var.do_token
   cluster_name = var.cluster_name
