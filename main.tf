@@ -54,10 +54,10 @@ resource "digitalocean_droplet" "bootstrap_node" {
 
   connection {
     type                = "ssh"
-    user                = "root"
+    user                = local.user
     host                = self.ipv4_address_private
     private_key         = tls_private_key.bastion_key.private_key_openssh
-    bastion_user        = "root"
+    bastion_user        = local.user
     bastion_host        = digitalocean_droplet.bastion.ipv4_address
     bastion_private_key = tls_private_key.terraform_cloud.private_key_openssh
   }
@@ -94,10 +94,10 @@ resource "digitalocean_droplet" "nodes" {
 
   connection {
     type                = "ssh"
-    user                = "root"
+    user                = local.user
     host                = self.ipv4_address_private
     private_key         = tls_private_key.bastion_key.private_key_openssh
-    bastion_user        = "root"
+    bastion_user        = local.user
     bastion_host        = digitalocean_droplet.bastion.ipv4_address
     bastion_private_key = tls_private_key.terraform_cloud.private_key_openssh
   }

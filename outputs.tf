@@ -17,3 +17,11 @@ output "region" {
 output "project_id" {
   value = digitalocean_project.project.id
 }
+
+output "cluster_address" {
+  value = "${digitalocean_droplet.bootstrap_node.ipv4_address}:8443"
+}
+
+output "trust_token" {
+  value = ssh_resource.trust_token.result
+}

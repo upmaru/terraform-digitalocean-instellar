@@ -1,6 +1,6 @@
 # Terraform DigitalOcean module for Instellar
 
-This module automatically forms LXD cluster on amazon DigitalOcean. This terraform module will do the following:
+This module automatically forms LXD cluster on DigitalOcean. This terraform module will do the following:
 
 - [x] Setup networking
 - [x] Setup bastion node

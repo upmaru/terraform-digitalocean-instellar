@@ -8,7 +8,7 @@ variable "cluster_name" {}
 variable "node_size" {}
 
 module "instellar" {
-  source = "upmaru/instellar/aws"
+  source = "upmaru/instellar/digitalocean"
   version = "0.3.0"
 
   do_token     = var.do_token
@@ -26,6 +26,14 @@ module "instellar" {
     "97:2f:5d:0d:4c:8d:13:8a:8f:4b:b8:74:c6:59:06:b7",
     "52:0d:1a:16:5e:64:22:28:1c:ec:3a:72:ce:2f:77:ba"
   ]
+}
+
+output "trust_token" {
+  value = module.instellar.trust_token
+}
+
+output "cluster_address" {
+  value = module.instellar.cluster_address
 }
 ```
 

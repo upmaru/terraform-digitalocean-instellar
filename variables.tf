@@ -14,11 +14,6 @@ variable "protect_leader" {
   default     = true
 }
 
-variable "cluster_size" {
-  description = "Define the size of your cluster"
-  default     = 1
-}
-
 variable "storage_size" {
   description = "Storage size to use with cluster"
 }

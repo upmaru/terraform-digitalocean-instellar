@@ -19,3 +19,11 @@ module "instellar" {
     "52:0d:1a:16:5e:64:22:28:1c:ec:3a:72:ce:2f:77:ba"
   ]
 }
+
+output "cluster_address" {
+  value = module.instellar.cluster_address
+}
+
+output "trust_token" {
+  value = module.instellar.trust_token
+}
