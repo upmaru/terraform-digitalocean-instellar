@@ -65,7 +65,6 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_bastion_size"></a> [bastion\_size](#input\_bastion\_size) | Size of the bastion instance defaults to Basic 512MB instance https://slugs.do-api.dev/ | `string` | `"s-1vcpu-512mb-10gb"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name for your cluster | `any` | n/a | yes |
-| <a name="input_cluster_size"></a> [cluster\_size](#input\_cluster\_size) | Define the size of your cluster | `number` | `1` | no |
 | <a name="input_cluster_topology"></a> [cluster\_topology](#input\_cluster\_topology) | How many nodes do you want in your cluster? | <pre>list(object({<br>    id   = number<br>    name = string<br>    size = optional(string, "s-1vcpu-1gb")<br>  }))</pre> | `[]` | no |
 | <a name="input_do_token"></a> [do\_token](#input\_do\_token) | Digital Ocean API Token | `any` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment for project in Digital Ocean possible values are Development, Staging, Production | `string` | `"Production"` | no |
@@ -81,9 +80,11 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cluster_address"></a> [cluster\_address](#output\_cluster\_address) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
 | <a name="output_cluster_vpc_id"></a> [cluster\_vpc\_id](#output\_cluster\_vpc\_id) | n/a |
 | <a name="output_db_access_tag_id"></a> [db\_access\_tag\_id](#output\_db\_access\_tag\_id) | n/a |
 | <a name="output_project_id"></a> [project\_id](#output\_project\_id) | n/a |
 | <a name="output_region"></a> [region](#output\_region) | n/a |
+| <a name="output_trust_token"></a> [trust\_token](#output\_trust\_token) | n/a |
 <!-- END_TF_DOCS -->
