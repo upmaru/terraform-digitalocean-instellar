@@ -193,8 +193,7 @@ resource "terraform_data" "removal" {
     bootstrap_node_private_ip   = digitalocean_droplet.bootstrap_node.ipv4_address_private
     terraform_cloud_private_key = tls_private_key.terraform_cloud.private_key_openssh
     commands = contains(yamldecode(ssh_resource.node_detail[each.key].result).roles, "database-leader") ? ["echo ${var.protect_leader ? "Node is database-leader cannot destroy" : "Tearing it all down"}", "exit ${var.protect_leader ? 1 : 0}"] : [
-      "lxc cluster evac --force ${digitalocean_droplet.nodes[each.key].name}",
-      "lxc cluster remove ${digitalocean_droplet.nodes[each.key].name}"
+      "lxc cluster remove --force --yes ${digitalocean_droplet.nodes[each.key].name}"
     ]
   }
 
