@@ -80,10 +80,12 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_bootstrap_node"></a> [bootstrap\_node](#output\_bootstrap\_node) | n/a |
 | <a name="output_cluster_address"></a> [cluster\_address](#output\_cluster\_address) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
 | <a name="output_cluster_vpc_id"></a> [cluster\_vpc\_id](#output\_cluster\_vpc\_id) | n/a |
 | <a name="output_db_access_tag_id"></a> [db\_access\_tag\_id](#output\_db\_access\_tag\_id) | n/a |
+| <a name="output_nodes"></a> [nodes](#output\_nodes) | n/a |
 | <a name="output_project_id"></a> [project\_id](#output\_project\_id) | n/a |
 | <a name="output_region"></a> [region](#output\_region) | n/a |
 | <a name="output_trust_token"></a> [trust\_token](#output\_trust\_token) | n/a |
