@@ -161,8 +161,8 @@ resource "terraform_data" "reboot" {
     bastion_public_ip           = digitalocean_droplet.bastion.ipv4_address
     node_private_ip             = digitalocean_droplet.nodes[each.key].ipv4_address_private
     terraform_cloud_private_key = tls_private_key.terraform_cloud.private_key_openssh
-    commands = contains(yamldecode(ssh_resource.node_detail[each.key].result).roles, "database-leader") ? ["echo Node is database-leader restarting later", "sudo shutdown -r +2"] : [
-      "sudo shutdown -r +1"
+    commands = contains(yamldecode(ssh_resource.node_detail[each.key].result).roles, "database-leader") ? ["echo Node is database-leader restarting later", "sudo shutdown -r +1"] : [
+      "sudo reboot"
     ]
   }
 
@@ -178,6 +178,7 @@ resource "terraform_data" "reboot" {
   }
 
   provisioner "remote-exec" {
+    on_failure = continue
     inline = self.input.commands
   }
 }
