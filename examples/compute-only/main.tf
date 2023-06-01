@@ -1,6 +1,4 @@
 variable "do_token" {}
-variable "cluster_name" {}
-variable "node_size" {}
 
 module "instellar" {
   source = "../.."

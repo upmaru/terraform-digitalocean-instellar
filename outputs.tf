@@ -25,3 +25,20 @@ output "cluster_address" {
 output "trust_token" {
   value = ssh_resource.trust_token.result
 }
+
+output "bootstrap_node" {
+  value = {
+    slug      = digitalocean_droplet.bootstrap_node.name
+    public_ip = digitalocean_droplet.bootstrap_node.ipv4_address
+  }
+}
+
+output "nodes" {
+  value = [
+    for key, node in digitalocean_droplet.nodes :
+    {
+      slug      = node.name
+      public_ip = node.ipv4_address
+    }
+  ]
+}
