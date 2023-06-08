@@ -19,7 +19,7 @@ output "project_id" {
 }
 
 output "cluster_address" {
-  value = "${digitalocean_droplet.bootstrap_node.ipv4_address}:8443"
+  value = digitalocean_droplet.bootstrap_node.ipv4_address
 }
 
 output "trust_token" {
