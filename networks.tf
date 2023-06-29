@@ -5,12 +5,14 @@ resource "digitalocean_vpc" "cluster_vpc" {
   ip_range    = var.vpc_ip_range
 }
 
+# tfsec:ignore:digitalocean-compute-no-public-egress
 resource "digitalocean_firewall" "nodes_firewall" {
   name = "${var.cluster_name}-instellar-nodes"
 
   tags = [digitalocean_tag.instellar_node.id]
 
   # SSH is only open to bastion node
+  # tfsec:ignore:digitalocean-compute-no-public-ingress[port_range=22]
   inbound_rule {
     protocol           = "tcp"
     port_range         = "22"
@@ -18,25 +20,28 @@ resource "digitalocean_firewall" "nodes_firewall" {
   }
 
   # Enable instellar to communicate with the nodes
+  # tfsec:ignore:digitalocean-compute-no-public-ingress[port_range=8443]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "8443"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
 
+  # tfsec:ignore:digitalocean-compute-no-public-ingress[port_range=443]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "443"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
 
-
+  # tfsec:ignore:digitalocean-compute-no-public-ingress[port_range=80]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "80"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
 
+  # tfsec:ignore:digitalocean-compute-no-public-ingress[port_range=49152]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "49152"
@@ -75,12 +80,14 @@ resource "digitalocean_firewall" "nodes_firewall" {
   }
 }
 
+# tfsec:ignore:digitalocean-compute-no-public-egress
 resource "digitalocean_firewall" "bastion_firewall" {
   name = "${var.cluster_name}-instellar-bastion"
 
   droplet_ids = digitalocean_droplet.bastion[*].id
 
   # SSH from any where
+  # tfsec:ignore:digitalocean-compute-no-public-ingress[port_range=22]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"

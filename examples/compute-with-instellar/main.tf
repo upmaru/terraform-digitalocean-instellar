@@ -14,7 +14,6 @@ module "compute" {
   node_size    = "s-2vcpu-4gb-amd"
   cluster_topology = [
     { id = 1, name = "rigel", size = "s-2vcpu-4gb-amd" },
-    { id = 2, name = "saiph", size = "s-2vcpu-4gb-amd" }
   ]
   storage_size = 50
   ssh_keys = [
@@ -27,7 +26,7 @@ variable "instellar_auth_token" {}
 
 module "instellar" {
   source  = "upmaru/bootstrap/instellar"
-  version = "0.3.1"
+  version = "~> 0.3"
 
   host            = "https://staging-web.instellar.app"
   auth_token      = var.instellar_auth_token
