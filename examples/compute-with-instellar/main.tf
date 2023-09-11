@@ -8,7 +8,6 @@ locals {
 module "compute" {
   source = "../.."
 
-  do_token     = var.do_token
   cluster_name = local.cluster_name
   vpc_ip_range = "10.0.2.0/24"
   node_size    = "s-2vcpu-4gb-amd"
