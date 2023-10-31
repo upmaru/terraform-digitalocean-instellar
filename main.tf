@@ -84,7 +84,7 @@ resource "digitalocean_droplet" "nodes" {
   region    = var.region
   size      = var.node_size
   ssh_keys  = [digitalocean_ssh_key.bastion.fingerprint]
-  vpc_uuid  = digitalocean_vpc.cluster_vpc.id
+  vpc_uuid  = var.vpc_id
   tags      = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_node.id]
   user_data = file("${path.module}/cloud-init.yml")
 

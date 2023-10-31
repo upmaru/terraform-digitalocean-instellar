@@ -1,7 +1,3 @@
-output "cluster_vpc_id" {
-  value = digitalocean_vpc.cluster_vpc.id
-}
-
 output "db_access_tag_id" {
   value = digitalocean_tag.db_access.id
 }

@@ -4,7 +4,7 @@ resource "digitalocean_droplet" "bastion" {
   region   = var.region
   size     = var.bastion_size
   ssh_keys = concat(var.ssh_keys, [digitalocean_ssh_key.terraform_cloud.fingerprint])
-  vpc_uuid = digitalocean_vpc.cluster_vpc.id
+  vpc_uuid = var.vpc_id
   tags     = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_bastion.id]
 
   connection {

@@ -1,10 +1,5 @@
-variable "do_token" {
-  description = "Digital Ocean API Token"
-  sensitive   = true
-}
-
-variable "cluster_vpc_id" {
-  description = "Cluster VPC Id"
+variable "vpc_id" {
+  description = "VPC ID"
 }
 
 variable "identifier" {
@@ -30,14 +25,9 @@ variable "region" {
   description = "Region for your cluster"
 }
 
-variable "db_access_tag_id" {
-  description = "Tag given to nodes that have db access"
-}
-
-variable "should_create_db_cluster" {
-  description = "Should we create the db cluster?"
-  type        = bool
-  default     = true
+variable "db_access_tags" {
+  description = "Tags of nodes that have db access"
+  type        = list(string)
 }
 
 variable "db_node_count" {
