@@ -3,7 +3,7 @@ resource "digitalocean_database_cluster" "this" {
   engine               = var.engine
   version              = var.engine_version
   region               = var.region
-  size                 = var.db_cluster_size
+  size                 = var.db_size
   node_count           = var.db_node_count
   private_network_uuid = var.vpc_id
 }
