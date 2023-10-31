@@ -1,8 +1,3 @@
-variable "do_token" {
-  description = "Digital Ocean API Token"
-  sensitive   = true
-}
-
 variable "region" {
   description = "Region for your cluster"
   default     = "sgp1"
@@ -32,6 +27,11 @@ variable "environment" {
   default     = "Production"
 }
 
+variable "vpc_id" {
+  description = "vpc id to pass in from the network module"
+  type = string
+}
+
 variable "vpc_ip_range" {
   description = "The IP range to use for VPC"
   default     = "10.0.1.0/24"
@@ -44,7 +44,7 @@ variable "bastion_size" {
 
 variable "node_size" {
   description = "Size of instances you want to use defaults to Basic 1GB instances https://slugs.do-api.dev/"
-  default     = "s-1vcpu-1gb"
+  default     = "s-2vcpu-4gb-amd"
 }
 
 variable "cluster_topology" {

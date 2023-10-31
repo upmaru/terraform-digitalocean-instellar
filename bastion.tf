@@ -1,6 +1,6 @@
 resource "digitalocean_droplet" "bastion" {
   image    = var.image
-  name     = "${var.cluster_name}-bastion"
+  name     = "${var.identifier}-bastion"
   region   = var.region
   size     = var.bastion_size
   ssh_keys = concat(var.ssh_keys, [digitalocean_ssh_key.terraform_cloud.fingerprint])
@@ -28,7 +28,7 @@ resource "digitalocean_droplet" "bastion" {
 
 # tfsec:ignore:digitalocean-compute-no-public-egress
 resource "digitalocean_firewall" "bastion_firewall" {
-  name = "${var.cluster_name}-instellar-bastion"
+  name = "${var.identifier}-instellar-bastion"
 
   droplet_ids = digitalocean_droplet.bastion[*].id
 

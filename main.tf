@@ -44,7 +44,7 @@ resource "digitalocean_droplet" "bootstrap_node" {
   region    = var.region
   size      = var.node_size
   ssh_keys  = [digitalocean_ssh_key.bastion.fingerprint]
-  vpc_uuid  = digitalocean_vpc.cluster_vpc.id
+  vpc_uuid  = var.vpc_id
   tags      = [digitalocean_tag.db_access.id, digitalocean_tag.instellar_node.id]
   user_data = file("${path.module}/cloud-init.yml")
 
@@ -272,7 +272,7 @@ resource "terraform_data" "removal" {
   depends_on = [
     digitalocean_droplet.bastion,
     digitalocean_droplet.bootstrap_node,
-    digitalocean_vpc.cluster_vpc,
+    var.vpc_id,
     digitalocean_firewall.bastion_firewall,
     digitalocean_firewall.nodes_firewall
   ]
