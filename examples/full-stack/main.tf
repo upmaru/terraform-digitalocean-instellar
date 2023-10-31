@@ -30,7 +30,7 @@ module "networking_primary" {
 
   identifier   = var.identifier
   region       = var.do_region
-  vpc_ip_range = "10.0.1.0/24"
+  vpc_ip_range = "11.0.1.0/24"
 }
 
 module "compute_primary" {
