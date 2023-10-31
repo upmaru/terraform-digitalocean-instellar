@@ -29,8 +29,8 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_db_access_tags"></a> [db\_access\_tags](#input\_db\_access\_tags) | Tags of nodes that have db access | `list(string)` | n/a | yes |
-| <a name="input_db_cluster_size"></a> [db\_cluster\_size](#input\_db\_cluster\_size) | Size of your cluster see https://docs.digitalocean.com/reference/api/api-reference/#operation/registry_get_options | `string` | `"db-s-1vcpu-1gb"` | no |
 | <a name="input_db_node_count"></a> [db\_node\_count](#input\_db\_node\_count) | Node count for the database | `number` | `1` | no |
+| <a name="input_db_size"></a> [db\_size](#input\_db\_size) | Size of your cluster see https://docs.digitalocean.com/reference/api/api-reference/#operation/registry_get_options | `string` | `"db-s-1vcpu-1gb"` | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | Define the database engine to use | `string` | `"pg"` | no |
 | <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | PostgreSQL version | `string` | `"13"` | no |
 | <a name="input_identifier"></a> [identifier](#input\_identifier) | Name of your cluster | `any` | n/a | yes |
