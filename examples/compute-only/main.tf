@@ -4,7 +4,7 @@ module "instellar" {
   source = "../.."
 
   do_token     = var.do_token
-  cluster_name = var.cluster_name
+  identifier   = var.identifier
   vpc_ip_range = "10.0.2.0/24"
   cluster_topology = [
     { id = 1, name = "apple", size = var.node_size },

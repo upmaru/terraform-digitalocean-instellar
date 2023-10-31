@@ -25,3 +25,36 @@ resource "digitalocean_droplet" "bastion" {
     ]
   }
 }
+
+# tfsec:ignore:digitalocean-compute-no-public-egress
+resource "digitalocean_firewall" "bastion_firewall" {
+  name = "${var.cluster_name}-instellar-bastion"
+
+  droplet_ids = digitalocean_droplet.bastion[*].id
+
+  # SSH from any where
+  # tfsec:ignore:digitalocean-compute-no-public-ingress[port_range=22]
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  # Enable all outbound traffic
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}

@@ -18,7 +18,7 @@ variable "storage_size" {
   description = "Storage size to use with cluster"
 }
 
-variable "cluster_name" {
+variable "identifier" {
   description = "Name for your cluster"
 }
 

@@ -1,10 +1,5 @@
-provider "digitalocean" {
-  token = var.do_token
-}
-
-resource "digitalocean_database_cluster" "database" {
-  count                = var.should_create_db_cluster ? 1 : 0
-  name                 = "${var.cluster_name}-${var.db_cluster_suffix}"
+resource "digitalocean_database_cluster" "this" {
+  name                 = "${var.identifier}-${var.engine}"
   engine               = var.engine
   version              = var.engine_version
   region               = var.region
@@ -13,8 +8,8 @@ resource "digitalocean_database_cluster" "database" {
   private_network_uuid = var.cluster_vpc_id
 }
 
-resource "digitalocean_database_firewall" "database_firewall" {
-  cluster_id = digitalocean_database_cluster.database[0].id
+resource "digitalocean_database_firewall" "this" {
+  cluster_id = digitalocean_database_cluster.this.id
 
   rule {
     type  = "tag"
@@ -22,9 +17,9 @@ resource "digitalocean_database_firewall" "database_firewall" {
   }
 }
 
-resource "digitalocean_project_resources" "add_database" {
+resource "digitalocean_project_resources" "this" {
   project   = var.project_id
   resources = [
-    digitalocean_database_cluster.database[0].urn
+    digitalocean_database_cluster.this.urn
   ]
 }
