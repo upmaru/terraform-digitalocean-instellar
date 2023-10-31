@@ -19,7 +19,7 @@ These functionality come together to enable the user to fully manage LXD cluster
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
-| <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | ~> 2.0 |
+| <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | ~> 2.31 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | 4.0.4 |
 
 ## Providers
@@ -50,7 +50,6 @@ No modules.
 | [digitalocean_tag.db_access](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/tag) | resource |
 | [digitalocean_tag.instellar_bastion](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/tag) | resource |
 | [digitalocean_tag.instellar_node](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/tag) | resource |
-| [digitalocean_vpc.cluster_vpc](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/vpc) | resource |
 | [ssh_resource.cluster_join_token](https://registry.terraform.io/providers/loafoe/ssh/latest/docs/resources/resource) | resource |
 | [ssh_resource.node_detail](https://registry.terraform.io/providers/loafoe/ssh/latest/docs/resources/resource) | resource |
 | [ssh_resource.trust_token](https://registry.terraform.io/providers/loafoe/ssh/latest/docs/resources/resource) | resource |
@@ -64,16 +63,16 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_bastion_size"></a> [bastion\_size](#input\_bastion\_size) | Size of the bastion instance defaults to Basic 512MB instance https://slugs.do-api.dev/ | `string` | `"s-1vcpu-512mb-10gb"` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name for your cluster | `any` | n/a | yes |
 | <a name="input_cluster_topology"></a> [cluster\_topology](#input\_cluster\_topology) | How many nodes do you want in your cluster? | <pre>list(object({<br>    id   = number<br>    name = string<br>    size = optional(string, "s-1vcpu-1gb")<br>  }))</pre> | `[]` | no |
-| <a name="input_do_token"></a> [do\_token](#input\_do\_token) | Digital Ocean API Token | `any` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment for project in Digital Ocean possible values are Development, Staging, Production | `string` | `"Production"` | no |
+| <a name="input_identifier"></a> [identifier](#input\_identifier) | Name for your cluster | `any` | n/a | yes |
 | <a name="input_image"></a> [image](#input\_image) | Image type of choice default is ubuntu 22.04 x86 | `string` | `"ubuntu-22-04-x64"` | no |
-| <a name="input_node_size"></a> [node\_size](#input\_node\_size) | Size of instances you want to use defaults to Basic 1GB instances https://slugs.do-api.dev/ | `string` | `"s-1vcpu-1gb"` | no |
+| <a name="input_node_size"></a> [node\_size](#input\_node\_size) | Size of instances you want to use defaults to Basic 1GB instances https://slugs.do-api.dev/ | `string` | `"s-2vcpu-4gb-amd"` | no |
 | <a name="input_protect_leader"></a> [protect\_leader](#input\_protect\_leader) | Protect database leader node | `bool` | `true` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region for your cluster | `string` | `"sgp1"` | no |
 | <a name="input_ssh_keys"></a> [ssh\_keys](#input\_ssh\_keys) | List of ssh keys fingerprint | `list(string)` | `[]` | no |
 | <a name="input_storage_size"></a> [storage\_size](#input\_storage\_size) | Storage size to use with cluster | `any` | n/a | yes |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | vpc id to pass in from the network module | `string` | n/a | yes |
 | <a name="input_vpc_ip_range"></a> [vpc\_ip\_range](#input\_vpc\_ip\_range) | The IP range to use for VPC | `string` | `"10.0.1.0/24"` | no |
 
 ## Outputs
@@ -82,9 +81,8 @@ No modules.
 |------|-------------|
 | <a name="output_bootstrap_node"></a> [bootstrap\_node](#output\_bootstrap\_node) | n/a |
 | <a name="output_cluster_address"></a> [cluster\_address](#output\_cluster\_address) | n/a |
-| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
-| <a name="output_cluster_vpc_id"></a> [cluster\_vpc\_id](#output\_cluster\_vpc\_id) | n/a |
 | <a name="output_db_access_tag_id"></a> [db\_access\_tag\_id](#output\_db\_access\_tag\_id) | n/a |
+| <a name="output_identifier"></a> [identifier](#output\_identifier) | n/a |
 | <a name="output_nodes"></a> [nodes](#output\_nodes) | n/a |
 | <a name="output_project_id"></a> [project\_id](#output\_project\_id) | n/a |
 | <a name="output_region"></a> [region](#output\_region) | n/a |
