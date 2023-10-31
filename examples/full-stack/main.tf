@@ -56,6 +56,8 @@ module "database_primary" {
   engine         = "pg"
   engine_version = "15"
   region         = var.do_region
+  db_size        = "db-s-1vcpu-1gb"
+  db_node_count  = 1
   project_id     = module.compute_primary.project_id
   vpc_id         = module.networking_primary.vpc_id
   db_access_tags = [

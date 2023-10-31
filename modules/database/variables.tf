@@ -6,7 +6,7 @@ variable "identifier" {
   description = "Name of your cluster"
 }
 
-variable "db_cluster_size" {
+variable "db_size" {
   description = "Size of your cluster see https://docs.digitalocean.com/reference/api/api-reference/#operation/registry_get_options"
   default     = "db-s-1vcpu-1gb"
 }
