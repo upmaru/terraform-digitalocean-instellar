@@ -5,9 +5,10 @@ terraform {
     ssh = {
       source = "loafoe/ssh"
     }
+
     digitalocean = {
       source  = "digitalocean/digitalocean"
-      version = "~> 2.0"
+      version = "~> 2.31"
     }
 
     tls = {

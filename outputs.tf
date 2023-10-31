@@ -1,13 +1,9 @@
-output "cluster_vpc_id" {
-  value = digitalocean_vpc.cluster_vpc.id
-}
-
 output "db_access_tag_id" {
   value = digitalocean_tag.db_access.id
 }
 
-output "cluster_name" {
-  value = var.cluster_name
+output "identifier" {
+  value = var.identifier
 }
 
 output "region" {
