@@ -30,7 +30,7 @@ module "networking_primary" {
 
   identifier   = var.identifier
   region       = var.do_region
-  vpc_ip_range = "11.0.1.0/24"
+  vpc_ip_range = "10.0.3.0/24"
 }
 
 module "compute_primary" {
@@ -69,6 +69,18 @@ variable "instellar_auth_token" {}
 provider "instellar" {
   host       = var.instellar_host
   auth_token = var.instellar_auth_token
+}
+
+module "storage" {
+  source  = "upmaru/bootstrap/instellar//modules/storage"
+  version = "~> 0.5"
+
+  bucket = module.bucket.name
+  region = var.do_region
+  host   = module.bucket.host
+
+  access_key = var.do_access_key
+  secret_key = var.do_secret_key
 }
 
 module "primary_cluster" {
