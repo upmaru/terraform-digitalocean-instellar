@@ -3,5 +3,5 @@ output "name" {
 }
 
 output "host" {
-  value = "${digitalocean_spaces_bucket.this.name}.${digitalocean_spaces_bucket.this.region}.digitaloceanspaces.com"
+  value = "${digitalocean_spaces_bucket.this.region}.digitaloceanspaces.com"
 }
