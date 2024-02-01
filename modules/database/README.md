@@ -23,6 +23,7 @@ No modules.
 | [digitalocean_database_cluster.this](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/database_cluster) | resource |
 | [digitalocean_database_firewall.this](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/database_firewall) | resource |
 | [digitalocean_project_resources.this](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/project_resources) | resource |
+| [digitalocean_database_ca.this](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/data-sources/database_ca) | data source |
 
 ## Inputs
 
@@ -43,6 +44,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_address"></a> [address](#output\_address) | n/a |
+| <a name="output_certificate"></a> [certificate](#output\_certificate) | n/a |
 | <a name="output_db_name"></a> [db\_name](#output\_db\_name) | n/a |
 | <a name="output_engine_version"></a> [engine\_version](#output\_engine\_version) | n/a |
 | <a name="output_identifier"></a> [identifier](#output\_identifier) | n/a |
