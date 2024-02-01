@@ -25,3 +25,7 @@ output "db_name" {
 output "engine_version" {
   value = var.engine_version
 }
+
+output "certificate" {
+  value = data.digitalocean_database_ca.this.certificate
+}

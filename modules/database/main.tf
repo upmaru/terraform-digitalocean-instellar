@@ -8,6 +8,10 @@ resource "digitalocean_database_cluster" "this" {
   private_network_uuid = var.vpc_id
 }
 
+data "digitalocean_database_ca" "this" {
+  cluster_id = digitalocean_database_cluster.this.id
+}
+
 resource "digitalocean_database_firewall" "this" {
   cluster_id = digitalocean_database_cluster.this.id
 
