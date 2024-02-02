@@ -12,3 +12,8 @@ variable "region" {
   description = "Region or availability zone"
   type = string
 }
+
+variable "environment" {
+  description = "Environment for project in Digital Ocean possible values are Development, Staging, Production"
+  default     = "Production"
+}

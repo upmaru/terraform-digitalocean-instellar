@@ -22,11 +22,6 @@ variable "image" {
   default     = "ubuntu-22-04-x64"
 }
 
-variable "environment" {
-  description = "Environment for project in Digital Ocean possible values are Development, Staging, Production"
-  default     = "Production"
-}
-
 variable "vpc_id" {
   description = "vpc id to pass in from the network module"
   type = string
@@ -47,6 +42,10 @@ variable "node_size" {
   default     = "s-2vcpu-4gb-amd"
 }
 
+variable "project_id" {
+  description = "Project ID reference"
+}
+ 
 variable "cluster_topology" {
   type = list(object({
     id   = number
