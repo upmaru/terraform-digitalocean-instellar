@@ -37,7 +37,7 @@ module "compute_primary" {
   source = "../.."
 
   identifier = "${var.identifier}-a"
-
+  project_id = module.networking_primary.project_id
   vpc_id       = module.networking_primary.vpc_id
   vpc_ip_range = module.networking_primary.vpc_ip_range
   storage_size = 50
@@ -58,7 +58,7 @@ module "database_primary" {
   region         = var.do_region
   db_size        = "db-s-1vcpu-1gb"
   db_node_count  = 1
-  project_id     = module.compute_primary.project_id
+  project_id     = module.networking_primary.project_id
   vpc_id         = module.networking_primary.vpc_id
   db_access_tags = [
     module.compute_primary.db_access_tag_id

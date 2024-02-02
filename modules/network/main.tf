@@ -4,3 +4,8 @@ resource "digitalocean_vpc" "this" {
   region      = var.region
   ip_range    = var.vpc_ip_range
 }
+
+resource "digitalocean_project" "this" {
+  name        = var.identifier
+  environment = var.environment
+}

@@ -10,10 +10,6 @@ output "region" {
   value = var.region
 }
 
-output "project_id" {
-  value = digitalocean_project.project.id
-}
-
 output "cluster_address" {
   value = digitalocean_droplet.bootstrap_node.ipv4_address
 }
