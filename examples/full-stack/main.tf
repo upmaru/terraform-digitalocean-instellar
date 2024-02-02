@@ -30,7 +30,7 @@ module "networking_primary" {
 
   identifier   = var.identifier
   region       = var.do_region
-  vpc_ip_range = "10.0.3.0/24"
+  vpc_ip_range = "10.10.1.0/24"
 }
 
 module "compute_primary" {
@@ -41,7 +41,9 @@ module "compute_primary" {
   vpc_id       = module.networking_primary.vpc_id
   vpc_ip_range = module.networking_primary.vpc_ip_range
   storage_size = 50
+  bastion_size = "s-1vcpu-1gb"
   node_size    = "s-2vcpu-4gb-amd"
+  region       = var.do_region
   cluster_topology = [
     { id = 1, name = "01", size = "s-2vcpu-4gb-amd" },
     { id = 2, name = "02", size = "s-2vcpu-4gb-amd" }
@@ -112,6 +114,7 @@ module "postgresql_service" {
     module.primary_cluster.cluster_id
   ]
 
+  certificate = module.database_primary.certificate
   channels = ["develop", "master"]
   credential = {
     username = module.database_primary.username

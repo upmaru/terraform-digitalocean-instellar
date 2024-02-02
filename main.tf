@@ -195,8 +195,8 @@ resource "digitalocean_project_resources" "this" {
   project     = var.project_id
   resources = concat(
     [for o in digitalocean_droplet.nodes : o.urn],
-    digitalocean_droplet.bootstrap_node.urn,
-    digitalocean_droplet.bastion.urn
+    digitalocean_droplet.bootstrap_node[*].urn,
+    digitalocean_droplet.bastion[*].urn
   )
 }
 
